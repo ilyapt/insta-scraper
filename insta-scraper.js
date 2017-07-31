@@ -19,7 +19,11 @@ exports.getAccountMedia = function(username, param2, param3){
     if(!param3){ cb = param2; maxid = ''; }else{ cb = param3; maxid='&max_id=' + param2; }
     getInstaJson('https://www.instagram.com/' + username + '/media/?__a=1' + maxid
         , function(error, json){
+          if (json.items != null) {
             cb(error, json.items);
+          } else {
+            cb(error, []);
+          }
         });
 };
 
