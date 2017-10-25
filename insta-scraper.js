@@ -47,7 +47,7 @@ exports.getMediaByLocationId = function(locationId, param2, param3){
 exports.getMediaByCode = function(code, cb){
     getInstaJson('https://www.instagram.com/p/' + code + '/?__a=1'
         , function(error, json){
-            cb(error, json.media);
+            cb(error, json.graphql);
         });
 };
 
