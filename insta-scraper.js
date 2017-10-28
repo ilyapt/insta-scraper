@@ -9,6 +9,13 @@ var request = require('request');
 exports.getAccountInfo = function(username, cb){
     getInstaJson('https://www.instagram.com/' + username + '/?__a=1'
         , function(error, json){
+            if(json == null){
+                json = {
+                    user: {
+                        username: null
+                    }
+                }
+            }
             cb(error, json.user);
         });
 };
@@ -19,6 +26,7 @@ exports.getAccountMedia = function(username, param2, param3){
     if(!param3){ cb = param2; maxid = ''; }else{ cb = param3; maxid='&max_id=' + param2; }
     getInstaJson('https://www.instagram.com/' + username + '/media/?__a=1' + maxid
         , function(error, json){
+            console.log(json);
             cb(error, json.items);
         });
 };
@@ -29,6 +37,13 @@ exports.getMediaByTag = function(tag, param2, param3){
     if(!param3){ cb = param2; maxid = ''; }else{ cb = param3; maxid='&max_id='+param2; }
     getInstaJson('https://www.instagram.com/explore/tags/' + encodeURIComponent(tag) + '/?__a=1' + maxid
         , function(error, json){
+            if(json == null){
+                json = {
+                    tag: {
+                        name: null
+                    }
+                }
+            }
             cb(error, json.tag);
         });
 };
@@ -47,6 +62,15 @@ exports.getMediaByLocationId = function(locationId, param2, param3){
 exports.getMediaByCode = function(code, cb){
     getInstaJson('https://www.instagram.com/p/' + code + '/?__a=1'
         , function(error, json){
+            if(json == null){
+                json = {
+                    graphql: {
+                        shortcode_media:{
+                            id: null
+                        }
+                    }
+                }
+            }
             cb(error, json.graphql);
         });
 };
