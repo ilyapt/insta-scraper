@@ -9,17 +9,23 @@ var request = require('request');
 exports.getAccountInfo = function(username, cb){
     getInstaJson('https://www.instagram.com/' + username + '/?__a=1'
         , function(error, json){
-            cb(error, json.user);
+          if (error) {
+              return cb(error);
+          }
+
+            cb(null, json.user);
         });
 };
 
 
-exports.getAccountMedia = function(username, param2, param3){
-    var cb, maxid;
-    if(!param3){ cb = param2; maxid = ''; }else{ cb = param3; maxid='&max_id=' + param2; }
-    getInstaJson('https://www.instagram.com/' + username + '/media/?__a=1' + maxid
+exports.getAccountMedia = function(username, cb){
+    getInstaJson('https://www.instagram.com/' + username + '/?__a=1'
         , function(error, json){
-            cb(error, json.items);
+            if (error) {
+                return cb(error);
+            }
+
+            cb(null, json.user.media.nodes);
         });
 };
 
@@ -29,7 +35,11 @@ exports.getMediaByTag = function(tag, param2, param3){
     if(!param3){ cb = param2; maxid = ''; }else{ cb = param3; maxid='&max_id='+param2; }
     getInstaJson('https://www.instagram.com/explore/tags/' + encodeURIComponent(tag) + '/?__a=1' + maxid
         , function(error, json){
-            cb(error, json.tag);
+            if (error) {
+                return cb(error);
+            }
+
+            cb(null, json.tag);
         });
 };
 
@@ -39,7 +49,11 @@ exports.getMediaByLocationId = function(locationId, param2, param3){
     if(!param3){ cb = param2; maxid = ''; }else{ cb = param3; maxid='&max_id='+param2; }
     getInstaJson('https://www.instagram.com/explore/locations/' + locationId + '/?__a=1' + maxid
         , function(error, json){
-            cb(error, json.location);
+            if (error) {
+                return cb(error);
+            }
+
+            cb(null, json.location);
         });
 };
 
@@ -47,7 +61,11 @@ exports.getMediaByLocationId = function(locationId, param2, param3){
 exports.getMediaByCode = function(code, cb){
     getInstaJson('https://www.instagram.com/p/' + code + '/?__a=1'
         , function(error, json){
-            cb(error, json.media);
+            if (error) {
+                return cb(error);
+            }
+
+            cb(null, json.media);
         });
 };
 
@@ -55,7 +73,11 @@ exports.getMediaByCode = function(code, cb){
 exports.generalSearch = function(search, cb){
     getInstaJson('https://www.instagram.com/web/search/topsearch/?query=' + encodeURIComponent(search)
         , function(error, json){
-            cb(error, json);
+            if (error) {
+                return cb(error);
+            }
+
+            cb(null, json);
         });
 };
 
@@ -71,10 +93,17 @@ exports.generalQuery = function(query, cb){
 
 function getInstaJson(url,cb){
     request.get(url, function(error, response, body){
-        if(error) cb(error, null);
-        else if(response.statusCode != 200) cb(response.statusCode, null);
-        else{
-            try{ var json = JSON.parse(body); }catch(err){ cb(err, null); return; }
+        if(error) {
+            cb(error, null);
+        } else if(response.statusCode != 200) {
+            cb(response.statusCode, null);
+        } else {
+            try{
+              var json = JSON.parse(body);
+            } catch(err){
+              cb(err, null); return;
+
+            }
             cb(null, json);
         }
     });
