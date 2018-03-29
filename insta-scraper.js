@@ -11,8 +11,10 @@ exports.getAccountInfo = function(username, cb){
         , function(error, json){
             if(json == null){
                 json = {
-                    user: {
-                        username: null
+                    graphql:{
+                        user: {
+                            username: null
+                        }
                     }
                 }
             }
