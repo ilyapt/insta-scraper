@@ -16,7 +16,7 @@ exports.getAccountInfo = function(username, cb){
                     }
                 }
             }
-            cb(error, json.user);
+            cb(error, json.graphql.user);
         });
 };
 
@@ -26,7 +26,6 @@ exports.getAccountMedia = function(username, param2, param3){
     if(!param3){ cb = param2; maxid = ''; }else{ cb = param3; maxid='&max_id=' + param2; }
     getInstaJson('https://www.instagram.com/' + username + '/media/?__a=1' + maxid
         , function(error, json){
-            console.log(json);
             cb(error, json.items);
         });
 };
@@ -39,12 +38,14 @@ exports.getMediaByTag = function(tag, param2, param3){
         , function(error, json){
             if(json == null){
                 json = {
-                    tag: {
-                        name: null
+                    graphql:{
+                        hashtag: {
+                            name: null
+                        }
                     }
                 }
             }
-            cb(error, json.tag);
+            cb(error, json.graphql.hashtag);
         });
 };
 
